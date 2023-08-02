@@ -6,10 +6,11 @@ import { useState } from "react";
 import { toast } from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { loginRedux } from "../redux/userSlice";
+import axios from "axios";
 
 const Login = () => {
   const [showPass, setShowPass] = useState(false);
-
+  const cartNumber = useSelector((state) => state.product.cartList).length;
   const [loginInfo, setLoginInfo] = useState({
     email: "",
     password: "",
@@ -20,8 +21,7 @@ const Login = () => {
   };
   // const SignUpLogo = `${process.env.PUBLIC_URL}/assets/login-animation-new.gif`
   const navigate = useNavigate();
-  // const userData = useSelector(state=>state)
-  // console.log(userData)
+  
 
   const dispatch = useDispatch();
 
@@ -34,7 +34,7 @@ const Login = () => {
       [name]: value,
     });
   };
-  console.log(process.env.REACT_APP_ADMIN_EMAIL);
+ 
   const submitInfo = async (e) => {
     e.preventDefault();
     if (
@@ -42,25 +42,31 @@ const Login = () => {
       !loginInfo.password ||
       !loginInfo.email
     ) {
-      const fetchData = await fetch(`${process.env.REACT_APP_DOMAIN}/login`, {
-        method: "POST",
-        headers: {
-          "content-type": "application/json",
-        },
-        body: JSON.stringify(loginInfo),
-      });
-
-      const dataResponse = await fetchData.json();
-      console.log(dataResponse.msg, dataResponse.returnedKeys);
-      if (dataResponse.returnedKeys) {
-        toast(`${dataResponse.msg},` + dataResponse.returnedKeys.firstname);
-      } else {
-        toast(dataResponse.msg);
-      }
-
-      if (dataResponse.alert) {
-        dispatch(loginRedux(dataResponse));
-        navigate("/");
+      try {
+        const { data } = await axios.post(
+          `${process.env.REACT_APP_DOMAIN}/login`,
+          loginInfo,
+          {
+            headers: {
+              "content-type": "application/json",
+            },
+          }
+        );
+        // console.log(data.msg, data.returnedKeys);
+        if (data.returnedKeys) {
+          toast(`${data.msg},` + data.returnedKeys.firstname);
+        } else {
+          toast(data.msg);
+        }
+        if (data.alert) {
+          dispatch(loginRedux(data));
+          navigate("/");
+          if (cartNumber > 0) {
+            navigate("/cart");
+          }
+        }
+      } catch (error) {
+        toast(error.response.data.msg);
       }
     }
   };

@@ -30,7 +30,7 @@ const dispatch = useDispatch()
         </h3>
         <p className=" text-slate-400  capitalize font-medium">{category}</p>
         <p className="  font-bold">
-          <span className="text-slate-500">₦</span>
+          <span className="text-slate-500">$</span>
           <span> {price}</span>
         </p>
         <div className="flex justify-between items-center   ">

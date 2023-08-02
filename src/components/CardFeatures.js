@@ -4,7 +4,7 @@ import { addItem } from "../redux/productSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 const CartFeatures = ({ image, price, category, name, id }) => {
-  // const cartProduct = useSelector((state)=>state.product.cartList)
+  
   // console.log(cartProduct) //multiple printin as ai why
   const dispatch = useDispatch();
   const addToCart = (e) => {
@@ -31,7 +31,7 @@ const CartFeatures = ({ image, price, category, name, id }) => {
           </h3>
           <p className=" text-slate-400  capitalize font-medium">{category}</p>
           <p className="  font-bold">
-            <span className="text-slate-800">₦</span>
+            <span className="text-slate-800">$</span>
             <span> {price}</span>
           </p>
         </div>

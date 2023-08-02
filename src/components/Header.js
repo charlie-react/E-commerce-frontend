@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 // import logo from "../assets/logo.png";
 import { Link } from "react-router-dom";
 import { HiOutlineUserCircle } from "react-icons/hi";
@@ -10,8 +10,16 @@ import { toast } from "react-hot-toast";
 const Header = () => {
   const [showModal, setShowModal] = useState(false);
   const userData = useSelector((state) => state.user);
-  console.log(userData);
+
   const dispatch = useDispatch();
+ useEffect(()=>{
+  if(userData.firstname){
+    setShowModal(showModal)
+  }
+ },[])
+ const removeLoginModal=()=>{
+  setShowModal(!showModal)
+ }
 
   const modalFn = () => {
     setShowModal(!showModal);
@@ -19,9 +27,10 @@ const Header = () => {
   const handleLogout = () => {
     dispatch(logoutRedux());
     toast("Logged Out Successfully");
+    setShowModal(!showModal)
   };
-  const cartNumber = (useSelector((state)=>state.product.cartList)).length
-  console.log(process.env.REACT_APP_ADMIN_EMAIL);
+  const cartNumber = useSelector((state) => state.product.cartList).length;
+
   return (
     // desktop
     <header className="fixed w-full h-16 shadow-md px-2 md:px-4 z-50 bg-white">
@@ -32,7 +41,7 @@ const Header = () => {
             <div className="h-full text-5xl text-red-600 ">RunAmNow</div>
           </Link>
         </div>
-        <div className="flex items-center gap-4 md:gap-7" >
+        <div className="flex items-center gap-4 md:gap-7">
           <nav className="  gap-4 md:gap-7 text-base md:text-lg md:flex hidden">
             <Link to={""}>Home</Link>
             <Link to={"menu/2"}>Menu</Link>
@@ -41,13 +50,18 @@ const Header = () => {
           </nav>
 
           <div className="text-2xl text-slate-600 relative">
-            <Link to={"cart"}> <BsCartFill /> 
-            <div className="absolute -top-2 -right-1 bg-red-500 text-white text-center w-4 h-4 p-0 m-0 rounded-full text-xs">
-            {cartNumber}
-            </div>
+            <Link to={"cart"}>
+              {" "}
+              <BsCartFill />
+              <div className="absolute -top-2 -right-1 bg-red-500 text-white text-center w-4 h-4 p-0 m-0 rounded-full text-xs">
+                {cartNumber}
+              </div>
             </Link>
           </div>
-          <div className="text-3xl text-slate-600 cursor-pointer h-8   " onClick={modalFn}>
+          <div
+            className="text-3xl text-slate-600 cursor-pointer h-8   "
+            onClick={modalFn}
+          >
             {userData.profilepic ? (
               <img
                 src={userData.profilepic}
@@ -71,13 +85,13 @@ const Header = () => {
               {userData.profilepic ? (
                 <Link
                   to={"/"}
-                  className="whitespace-nowrap cursor-pointer bg-red-400 text-white rounded p-1"
+                  className="whitespace-nowrap cursor-pointer bg-red-700 text-white rounded p-1"
                   onClick={handleLogout}
                 >
                   Logout ({userData.firstname})
                 </Link>
               ) : (
-                <Link to={"login"} className="whitespace-nowrap cursor-pointer">
+                <Link to={"login"} className="whitespace-nowrap cursor-pointer" onClick={removeLoginModal}>
                   Login
                 </Link>
               )}

@@ -1,11 +1,10 @@
 import React, { useRef, useState, useEffect } from "react";
 import HomeCard from "../components/HomeCard";
-import { useSelector } from "react-redux";
+ 
 import products from "../ProductsArray";
 import CartFeatures from "../components/CardFeatures";
 import { GrFormPrevious, GrFormNext } from "react-icons/gr";
-import Filter from "../components/Filter";
-import { CiForkAndKnife } from "react-icons/ci";
+ 
 import TotalProducts from "../components/TotalProducts";
 
 const Home = () => {
@@ -14,7 +13,7 @@ const Home = () => {
   const veggiesProductsDisplay = products.filter(
     (product) => product.category === "veggies"
   );
-  console.log(veggiesProductsDisplay);
+ 
   const sliderRef = useRef();
   const handleScrollPrev = (e) => {
     sliderRef.current.scrollLeft -= 200;
@@ -103,6 +102,7 @@ const Home = () => {
         </div>
         <TotalProducts title={"All Products"} />
       </div>
+    
     </div>
   );
 };

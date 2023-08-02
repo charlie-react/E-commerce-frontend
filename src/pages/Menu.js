@@ -7,11 +7,11 @@ import { addItem } from "../redux/productSlice";
 
 const Menu = () => {
   const { filter } = useParams();
-  console.log(filter);
+  // console.log(filter);
   const findProduct = products.filter(
     (element) => element.id === Number(filter) 
   )[0];
-  console.log(findProduct);
+ 
   const { image, category, description, id, price, name } = findProduct;
   const dispatch = useDispatch()
   const addToCart = (e) => {
@@ -19,6 +19,11 @@ const Menu = () => {
       id,price,name,category,image
     }));
   };
+  const buyButton =()=>{
+    dispatch(addItem({
+      id,price,name,category,image
+    }));
+  }
   return (
     <div className="p-2 md:p-4">
       <div className="md:flex m-auto bg-wheat-100 w-full max-w-2xl">
@@ -34,11 +39,11 @@ const Menu = () => {
           </h3>
           <p className=" text-slate-400  capitalize font-medium md:text-3xl">{category}</p>
           <p className="  font-bold md:text-xl">
-            <span className="text-slate-600">₦</span>
+            <span className="text-slate-600">$</span>
             <span> {price}</span>
           </p> 
           <div className="flex justify-center gap-2">
-          <button className="bg-green-400 py-1 px-1 text-white rounded my-2 w-full min-w-[100px]  hover:bg-green-500">Buy</button>
+          <button className="bg-green-400 py-1 px-1 text-white rounded my-2 w-full min-w-[100px]  hover:bg-green-500" onClick={buyButton}>Buy</button>
           <button className="bg-green-400 py-1 px-1 text-white rounded my-2 w-full min-w-[100px]  hover:bg-green-500 md:mr-1" onClick={addToCart}>Add To Cart</button>
           </div>
           <div >

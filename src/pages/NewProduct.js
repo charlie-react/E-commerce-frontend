@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { BsCloudUpload } from "react-icons/bs";
 import { imageToBase64 } from "../utility/img-base64";
-import {toast} from "react-hot-toast"
+import { toast } from "react-hot-toast";
+import axios from "axios";
 
 const NewProduct = () => {
   const [data, setData] = useState({
@@ -30,32 +31,31 @@ const NewProduct = () => {
 
   const submitNewProduct = async (e) => {
     e.preventDefault();
-    const { name, image, category, price,description } = data;
-    if ((name && image && category && price)|| (!description)) {
-      const fetchData = await fetch(
-        `${process.env.REACT_APP_DOMAIN}/newproduct`,
-        {
-          method: "POST",
-          headers: {
-            "content-type": "application/json",
-          },
-          body: JSON.stringify(data),
-        }
-      );
-
-      const dataFeedback = await fetchData.json();
-      toast(dataFeedback.msg)
-      setData({
-        name: "",
-        image: "",
-        description: "",
-        price: "",
-        category: "",
-      })
+    const { name, image, category, price, description } = data;
+    if ((name && image && category && price) || !description) {
+      try {
+        const response = await axios.post(
+          `${process.env.REACT_APP_DOMAIN}/newproduct`,
+          data,
+          {
+            headers: {
+              "content-type": "application/json",
+            },
+          }
+        );
+        toast(response.data.msg);
+        setData({
+          name: "",
+          image: "",
+          description: "",
+          price: "",
+          category: "",
+        });
+      } catch (error) {
+        toast(error.response.data.msg)
+      }
     }
     // else if((description || !description)){ toast("input required fields")}
-   
-   
   };
 
   return (

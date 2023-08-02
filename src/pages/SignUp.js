@@ -4,6 +4,7 @@ import { BiShow, BiHide } from "react-icons/bi";
 import { Link, useNavigate } from "react-router-dom";
 import { imageToBase64 } from "../utility/img-base64";
 import { toast } from "react-hot-toast";
+import axios from "axios"
 
 const SignUp = () => {
   const navigation = useNavigate();
@@ -36,7 +37,7 @@ const SignUp = () => {
     });
   };
   const handleProfilePicUpload = async (e) => {
-    console.log(e.target.files[0]);
+    // console.log(e.target.files[0]);
     const image = await imageToBase64(e.target.files[0]);
     setLoginInfo((prevState) => {
       return {
@@ -46,6 +47,7 @@ const SignUp = () => {
     });
   };
   console.log(process.env.REACT_APP_DOMAIN);
+
   const submitInfo = async (e) => {
     e.preventDefault();
     if (
@@ -55,35 +57,76 @@ const SignUp = () => {
       loginInfo.email
     ) {
       if (loginInfo.password === loginInfo.confirmpassword) {
-        const fetchData = await fetch(
-          `${process.env.REACT_APP_DOMAIN}/signup`,
-          {
-            method: "POST",
-            headers: {
-              "content-type": "application/json",
-            },
-            body: JSON.stringify(loginInfo),
+        try {
+          const {data} = await axios.post(
+            `${process.env.REACT_APP_DOMAIN}/signup`,
+            loginInfo,
+            {
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            }
+          );
+          
+          
+          console.log(data.user);
+  
+          // alert(dataResponse.msg);
+          toast(data.msg);
+          // const newUser = { ...loginInfo, id: new Date().getTime().toString() };
+          // setCollectInfo([...collectInfo, newUser]);
+          if (data.alert) {
+            navigation('/login');
           }
-        );
-
-        const dataResponse = await fetchData.json();
-        console.log(dataResponse.user);
-
-        // alert(dataResponse.msg);
-        toast(dataResponse.msg)
-        // const newUser = { ...loginInfo, id: new Date().getTime().toString() };
-        // setCollectInfo([...collectInfo, newUser]);
-        if(dataResponse.alert){
-          navigation("/login");
+        } catch (error) {
+          toast(error.response.data.msg);
         }
-       
       } else {
-        toast("passwords do not match");
+        toast('passwords do not match');
       }
     } else {
-      toast("please enter required fields");
+      toast('please enter required fields');
     }
   };
+  // usin fetch api
+  // const submitInfo = async (e) => {
+  //   e.preventDefault();
+  //   if (
+  //     loginInfo.firstname &&
+  //     loginInfo.password &&
+  //     loginInfo.confirmpassword &&
+  //     loginInfo.email
+  //   ) {
+  //     if (loginInfo.password === loginInfo.confirmpassword) {
+  //       const fetchData = await fetch(
+  //         `${process.env.REACT_APP_DOMAIN}/signup`,
+  //         {
+  //           method: "POST",
+  //           headers: {
+  //             "content-type": "application/json",
+  //           },
+  //           body: JSON.stringify(loginInfo),
+  //         }
+  //       );
+
+  //       const dataResponse = await fetchData.json();
+  //       console.log(dataResponse.user);
+
+  //       // alert(dataResponse.msg);
+  //       toast(dataResponse.msg)
+  //       // const newUser = { ...loginInfo, id: new Date().getTime().toString() };
+  //       // setCollectInfo([...collectInfo, newUser]);
+  //       if(dataResponse.alert){
+  //         navigation("/login");
+  //       }
+       
+  //     } else {
+  //       toast("passwords do not match");
+  //     }
+  //   } else {
+  //     toast("please enter required fields");
+  //   }
+  // };
   return (
     <div className="p-3 md:p-4">
       <div className="bg-white m-auto max-w-sm w-full flex items-center flex-col p-4">

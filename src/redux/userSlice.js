@@ -12,7 +12,8 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     loginRedux: (state, action) => {
-      console.log(action)
+    
+     
       const {
         payload: {
           returnedKeys: { firstname, lastname, email, _id, profilepic },
